@@ -1,6 +1,6 @@
 // import cors from "cors";
 
-import cors from "cors";
+const cors = require("cors");
 
 const express = require("express");
 const http = require("http");
@@ -9,7 +9,12 @@ const socketIo = require("socket.io");
 const app = express();
 const server = http.createServer(app);
 
-const io = socketIo(server);
+const io = socketIo(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST", "OPTIONS"]
+  }
+});
 
 app.use(cors());
 
@@ -17,8 +22,8 @@ io.on("connection", (socket) => {
   console.log("New client connected");
 
   // Send a message to the client on connection
-//   socket.emit("message", "Hello from server");
-//   console.log("message emitted");
+  socket.emit("message", "Hello from server");
+  console.log("message emitted");
 
   // Listen for messages from the client
   socket.on("message", (data) => {
